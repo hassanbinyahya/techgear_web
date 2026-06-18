@@ -3,14 +3,14 @@ import { NavLink, Outlet, Link, Navigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 
 const navItems = [
-  { path: 'dashboard', label: 'Overview' },
-  { path: 'products', label: 'Products' },
-  { path: 'orders', label: 'Orders' },
-  { path: 'inventory', label: 'Inventory' },
-  { path: 'manage-products', label: 'Manage Products' },
-  { path: 'finance', label: 'Finance' },
-  { path: 'hr', label: 'HR' },
-  { path: 'add-product', label: 'Add Product' },
+  { path: 'dashboard', label: '📊 Overview' },
+  { path: 'products', label: '📦 Products' },
+  { path: 'orders', label: '🛒 Orders' },
+  { path: 'inventory', label: '📉 Inventory' },
+  { path: 'manage-products', label: '⚙️ Manage Products' },
+  { path: 'finance', label: '💰 Finance' },
+  { path: 'hr', label: '👨‍💼 HR' },
+  { path: 'add-product', label: '➕ Add Product' },
 ];
 
 const AdminLayout = () => {
