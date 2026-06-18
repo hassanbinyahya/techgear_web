@@ -14,6 +14,31 @@ const userSchema = new mongoose.Schema({
     type: String, 
     required: true 
   },
+  role: {
+    type: String,
+    enum: ['customer', 'admin', 'employee'],
+    default: 'customer'
+  },
+  status: {
+    type: String,
+    enum: ['active', 'blocked'],
+    default: 'active'
+  },
+  phone: String,
+  shippingAddress: {
+    street: String,
+    city: String,
+    state: String,
+    zip: String,
+    country: String
+  },
+  billingAddress: {
+    street: String,
+    city: String,
+    state: String,
+    zip: String,
+    country: String
+  },
   created_at: { 
     type: Date, 
     default: Date.now 
@@ -21,3 +46,4 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
+

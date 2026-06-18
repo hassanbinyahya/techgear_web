@@ -11,12 +11,31 @@ const productSchema = new mongoose.Schema({
     required: true 
   },
   category: String,
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category'
+  },
+  brand: String,
+  brandId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Brand'
+  },
+  description: String,
   price: Number,
   image_url: String,
   stock: { 
     type: Number, 
     default: 50 
+  },
+  specifications: [{
+    name: String,
+    value: String
+  }],
+  ratings: {
+    average: { type: Number, default: 0 },
+    count: { type: Number, default: 0 }
   }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);
+
