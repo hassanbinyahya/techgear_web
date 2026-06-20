@@ -3,7 +3,6 @@ export const categories = [
     title: "Cases & Covers",
     products: [
       { id: 1, name: "Silicone Case", price: 12, image_url: "/images/Silicone Case.png", badge: "Popular" },
-      { id: 2, name: "Rugged Armor", price: 18, image_url: "/images/Rugged Armor.png" },
       { id: 3, name: "Wallet Case", price: 25, image_url: "/images/Wallet Case.png" },
       { id: 4, name: "Transparent TPU", price: 10, image_url: "/images/Transparent TPU.png" },
       { id: 5, name: "Leather Flip Case", price: 28, image_url: "/images/Leather Flip Case.png" }
@@ -171,15 +170,13 @@ export const categories = [
     products: [
       { id: 83, name: "AUX to Bluetooth Adapter", price: 18, image_url: "/images/AUX to Bluetooth Adapter.png" },
       { id: 84, name: "FM Transmitter", price: 21, image_url: "/images/FM Transmitter.png" },
-      { id: 85, name: "Magnetic Dash Plate", price: 14, image_url: "/images/Magnetic Dash Plate.png" },
-      { id: 86, name: "Headrest Tablet/Phone Mount", price: 32, image_url: "/images/Headrest Tablet-Phone Mount.png" }
+      { id: 85, name: "Magnetic Dash Plate", price: 14, image_url: "/images/Magnetic Dash Plate.png" }
     ]
   },
   {
     title: "Fashion/Lifestyle",
     products: [
       { id: 87, name: "Designer Phone Pouch", price: 22, image_url: "/images/Designer Phone Pouch.png" },
-      { id: 88, name: "Wallet/Card Holder (Stick-on)", price: 12, image_url: "/images/Wallet-Card Holder (Stick-on).png" },
       { id: 89, name: "Smartphone Armband", price: 14, image_url: "/images/Smartphone Armband.png" },
       { id: 90, name: "Hand-free Neck Strap", price: 11, image_url: "/images/Hand-free Neck Strap.png" }
     ]

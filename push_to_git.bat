@@ -12,7 +12,7 @@ echo Committing changes...
 git commit -m "Auto-commit before pushing from push utility script"
 echo.
 echo Pushing code to GitHub...
-git push -u origin master
+git push origin main
 echo.
 echo ==============================================
 echo ✓ Code successfully pushed!
