@@ -16,7 +16,6 @@ export const SearchProvider = ({ children }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [allProducts, setAllProducts] = useState([]);
-  const [loadingProducts, setLoadingProducts] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
