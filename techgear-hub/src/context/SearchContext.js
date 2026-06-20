@@ -25,8 +25,6 @@ export const SearchProvider = ({ children }) => {
         setAllProducts(response.data);
       } catch (error) {
         console.error('Failed to load products for search suggestions:', error);
-      } finally {
-        setLoadingProducts(false);
       }
     };
 
