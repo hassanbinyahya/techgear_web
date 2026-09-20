@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import API from '../../api/axios';
+
+const STORAGE_KEY = 'techgear_admin_inventory';
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
@@ -19,27 +20,34 @@ const AddProduct = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await API.post('/products', {
-        name: formData.name,
-        sku: formData.sku,
-        category: formData.category,
-        price: Number(formData.price),
-        image_url: formData.image_url || 'https://via.placeholder.com/300x300?text=Product'
-      });
-      setMessage('Product added successfully.');
-      setFormData({ name: '', sku: '', category: '', price: '', stock: '', image_url: '' });
-    } catch (error) {
-      setMessage('Unable to add product. Please try again.');
-    }
+
+    const newProduct = {
+      id: `local-${Date.now()}`,
+      name: formData.name,
+      sku: formData.sku,
+      category: formData.category,
+      price: Number(formData.price),
+      stock: Number(formData.stock || 0),
+      image_url: formData.image_url || 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80',
+    };
+
+    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const updatedProducts = [newProduct, ...existing];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedProducts));
+
+    setMessage('Product added successfully.');
+    setFormData({ name: '', sku: '', category: '', price: '', stock: '', image_url: '' });
   };
 
   return (
     <div className="admin-page">
       <header className="flex-header">
-        <h2>Add New Product</h2>
+        <div>
+          <h2>Add New Product</h2>
+          <p className="section-subtitle">Create a product card and push it into the inventory list instantly.</p>
+        </div>
       </header>
 
       <form className="admin-form" onSubmit={handleSubmit}>
@@ -62,6 +70,11 @@ const AddProduct = () => {
         <div className="form-group">
           <label htmlFor="price">Price</label>
           <input type="number" id="price" name="price" value={formData.price} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="stock">Stock</label>
+          <input type="number" id="stock" name="stock" value={formData.stock} onChange={handleChange} required />
         </div>
 
         <div className="form-group">

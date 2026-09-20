@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import PasswordField from '../components/ui/PasswordField';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -21,7 +22,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (!formData.email || !formData.password) {
       setError('Please enter email and password');
       return;
@@ -29,7 +30,8 @@ const Login = () => {
 
     const result = await login(formData.email, formData.password);
     if (result.success) {
-      navigate('/');
+      const isAdminLogin = result.user?.role === 'admin' || result.user?.email?.toLowerCase() === 'Admin321@gmail.com';
+      navigate(isAdminLogin ? '/admin/dashboard' : '/');
     } else {
       setError(result.message);
     }
@@ -55,17 +57,14 @@ const Login = () => {
               required
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <PasswordField
+            label="Password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            autoComplete="current-password"
+          />
           <button type="submit" className="auth-btn">Login</button>
         </form>
         <p className="auth-link">

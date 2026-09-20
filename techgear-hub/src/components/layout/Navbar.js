@@ -1,11 +1,15 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import { useSearch } from "../../context/SearchContext";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+  const { searchQuery, setSearchQuery, searchResults, showSuggestions, clearSearch, selectProduct } = useSearch();
+  const isAdminUser = user && (user.role === 'admin' || user.email?.toLowerCase() === 'Admin321@gmail.com');
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -15,10 +19,26 @@ export default function Navbar() {
     setIsMenuOpen(false);
   };
 
+  const handleSearchInput = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
     const trimmedQuery = searchQuery.trim();
-    navigate(`/products${trimmedQuery ? `?search=${encodeURIComponent(trimmedQuery)}` : ''}`);
+    if (!trimmedQuery) {
+      navigate('/products');
+      clearSearch();
+      return;
+    }
+
+    navigate(`/products?search=${encodeURIComponent(trimmedQuery)}`);
+  };
+
+  const handleSuggestionClick = (product) => {
+    selectProduct(product);
+    navigate(`/products?search=${encodeURIComponent(product.name)}`);
   };
 
   const isActive = (path) => {
@@ -39,13 +59,32 @@ export default function Navbar() {
             type="text"
             placeholder="Search products..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchInput}
             className="search-input"
           />
           <button type="submit" className="search-btn">
             <span>🔍</span>
           </button>
         </form>
+
+        {showSuggestions && searchResults.length > 0 && (
+          <div className="search-suggestions" role="listbox" aria-label="Product suggestions">
+            {searchResults.map((product) => (
+              <button
+                key={product._id || product.id}
+                type="button"
+                className="search-suggestion-item"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  handleSuggestionClick(product);
+                }}
+              >
+                <span className="suggestion-name">{product.name}</span>
+                <span className="suggestion-category">{product.category}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Desktop Navigation */}
@@ -85,13 +124,15 @@ export default function Navbar() {
         >
           <span>✍️</span> Register
         </Link>
-        <Link
-          to="/admin/dashboard"
-          className={`nav-link admin-link ${isActive('/admin/dashboard') ? 'active' : ''}`}
-          onClick={closeMenu}
-        >
-          <span>⚙️</span> Admin
-        </Link>
+        {isAdminUser && (
+          <Link
+            to="/admin/dashboard"
+            className={`nav-link admin-link ${isActive('/admin/dashboard') ? 'active' : ''}`}
+            onClick={closeMenu}
+          >
+            <span>⚙️</span> Admin
+          </Link>
+        )}
       </div>
 
       {/* Mobile Menu Button */}
@@ -142,13 +183,15 @@ export default function Navbar() {
         >
           <span>✍️</span> Register
         </Link>
-        <Link
-          to="/admin/dashboard"
-          className={`nav-link admin-link ${isActive('/admin/dashboard') ? 'active' : ''}`}
-          onClick={closeMenu}
-        >
-          <span>⚙️</span> Admin
-        </Link>
+        {isAdminUser && (
+          <Link
+            to="/admin/dashboard"
+            className={`nav-link admin-link ${isActive('/admin/dashboard') ? 'active' : ''}`}
+            onClick={closeMenu}
+          >
+            <span>⚙️</span> Admin
+          </Link>
+        )}
       </div>
 
       {/* Mobile Overlay */}

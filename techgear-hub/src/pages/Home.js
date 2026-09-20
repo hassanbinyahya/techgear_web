@@ -33,11 +33,23 @@ const Home = () => {
         return icons[title] || '✨';
     };
 
+    const getImageUrl = (product) => {
+        if (!product?.image_url) {
+            return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 420"%3E%3Crect width="600" height="420" fill="%230f172a"/%3E%3Ccircle cx="300" cy="170" r="100" fill="%2338bdf8" fill-opacity="0.25"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23e2e8f0" font-size="28" font-family="Arial"%3ETechGear%3C/text%3E%3C/svg%3E';
+        }
+
+        if (product.image_url.startsWith('http')) {
+            return product.image_url;
+        }
+
+        const filename = product.image_url.split('/').pop();
+        return `http://localhost:5000/images/${encodeURIComponent(filename)}`;
+    };
+
     useEffect(() => {
         API.get('/products')
             .then(res => {
                 const allProducts = res.data;
-                // Get first 8 products as featured
                 setFeaturedProducts(allProducts.slice(0, 8));
                 setLoading(false);
             })
@@ -47,9 +59,10 @@ const Home = () => {
             });
     }, []);
 
+    const spotlightProducts = featuredProducts.slice(0, 3);
+
     return (
         <div className="container">
-            {/* Hero Section */}
             <div className="hero-section">
                 <div className="hero-background-decoration"></div>
                 <div className="hero-content">
@@ -82,6 +95,20 @@ const Home = () => {
                     </div>
                 </div>
             </div>
+
+            {spotlightProducts.length > 0 && (
+                <div className="featured-showcase">
+                    {spotlightProducts.map((product, index) => (
+                        <div key={product._id || product.id || index} className={`showcase-card showcase-card-${index + 1}`}>
+                            <img src={getImageUrl(product)} alt={product.name} />
+                            <div className="showcase-card-content">
+                                <span>{product.category}</span>
+                                <h3>{product.name}</h3>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
 
             <div className="section-divider" style={{ marginTop: '1.5rem' }}>
                 <h2>Shop by Collection</h2>

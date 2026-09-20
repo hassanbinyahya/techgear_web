@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useState } from 'react';
 
 const CartContext = createContext();
 
@@ -47,9 +47,21 @@ const cartReducer = (state, action) => {
 
 export const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, { items: [] });
+  const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    if (!toast) return undefined;
+
+    const timer = setTimeout(() => {
+      setToast(null);
+    }, 2200);
+
+    return () => clearTimeout(timer);
+  }, [toast]);
 
   const addToCart = (product) => {
     dispatch({ type: 'ADD_TO_CART', payload: product });
+    setToast('Your product added successfully');
   };
 
   const removeFromCart = (id) => {
@@ -68,6 +80,8 @@ export const CartProvider = ({ children }) => {
     return state.items.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
+  const hideToast = () => setToast(null);
+
   return (
     <CartContext.Provider value={{
       items: state.items,
@@ -76,6 +90,8 @@ export const CartProvider = ({ children }) => {
       updateQuantity,
       clearCart,
       getTotal,
+      toast,
+      hideToast,
     }}>
       {children}
     </CartContext.Provider>

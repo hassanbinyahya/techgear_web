@@ -21,7 +21,7 @@ export const SearchProvider = ({ children }) => {
     const fetchProducts = async () => {
       try {
         const response = await API.get('/products');
-        setAllProducts(response.data);
+        setAllProducts(response.data || []);
       } catch (error) {
         console.error('Failed to load products for search suggestions:', error);
       }
@@ -30,19 +30,25 @@ export const SearchProvider = ({ children }) => {
     fetchProducts();
   }, []);
 
-  const searchProducts = (query) => {
-    if (!query.trim()) {
+  useEffect(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
+    if (!normalizedQuery || !allProducts.length) {
       setSearchResults([]);
       setShowSuggestions(false);
       return;
     }
 
-    const filtered = allProducts.filter(product =>
-      product.name.toLowerCase().includes(query.toLowerCase())
-    );
+    const filtered = allProducts
+      .filter(product => product?.name && product.name.toLowerCase().includes(normalizedQuery))
+      .slice(0, 6);
 
     setSearchResults(filtered);
-    setShowSuggestions(true);
+    setShowSuggestions(filtered.length > 0);
+  }, [allProducts, searchQuery]);
+
+  const searchProducts = (query) => {
+    setSearchQuery(query || '');
   };
 
   const clearSearch = () => {
